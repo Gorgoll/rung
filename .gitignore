@@ -1,0 +1,13 @@
+# Rust build output
+/target/
+
+# Cargo lock (ignore for libraries, keep for binaries)
+Cargo.lock
+
+# IDE files
+.idea/
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
