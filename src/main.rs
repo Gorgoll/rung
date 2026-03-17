@@ -2,8 +2,7 @@ mod ball_handler;
 mod spawn_border;
 
 use crossterm::{cursor, execute, terminal};
-use std::io::{stdout, Write};
-use crossterm::terminal::ClearType;
+use std::io::{stdout};
 use crate::ball_handler::handle_ball;
 use crate::spawn_border::draw_border;
 

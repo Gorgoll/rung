@@ -1,17 +1,21 @@
 ﻿use std::io::{stdout, Write};
 use std::time::Duration;
 use crossterm::{cursor, execute};
+use rand::RngExt;
 use crate::{TOTAL_HEIGHT, TOTAL_WIDTH};
 
 // https://files.catbox.moe/n8zxkm.gif
 pub(crate) async fn handle_ball(mut ball_pos: (u16, u16)) {
     let mut stdout = stdout();
+
+    let mut bounced: bool = false;
     let mut ball_speed: u8 = 2;
+
     let mut dx: i8 = 1;
     let mut dy: i8 = 1;
+
     loop {
-        // TODO: Randomize ball speed every bounce
-        for _ in 1..ball_speed {
+        for _ in 0..ball_speed {
             // Clear ball
             execute!(stdout, cursor::MoveTo(ball_pos.0, ball_pos.1)).unwrap();
             print!(" ");
@@ -28,14 +32,27 @@ pub(crate) async fn handle_ball(mut ball_pos: (u16, u16)) {
             // Check if there are any borders
             if ball_pos.0 <= 1 || ball_pos.0 >= TOTAL_WIDTH - 1 {
                 dx *= -1;
+                ball_speed = change_ball_speed();
+                bounced = true;
             }
 
             if ball_pos.1 <= 1 || ball_pos.1 >= TOTAL_HEIGHT - 1 {
                 dy *= -1;
+                ball_speed = change_ball_speed();
+                bounced = true;
             }
 
             stdout.flush().unwrap();
+            if bounced {
+                bounced = false;
+                break;
+            }
         }
         tokio::time::sleep(Duration::from_millis(40)).await;
     }
+}
+
+fn change_ball_speed() -> u8{
+    let mut rng = rand::rng();
+    rng.random_range(1..3)
 }
